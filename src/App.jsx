@@ -8,6 +8,8 @@ import Login from "./components/Login";
 import Register from "./components/Register";
 import { Provider } from "react-redux";
 import store from "./app/store";
+import { PrivateRoute } from "./components/PrivateRoute";
+import Account from "./components/Account";
 
 function App() {
   return (
@@ -20,6 +22,14 @@ function App() {
           <Route path="/books/:id" element={<SingleBook />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route
+            path="/account"
+            element={
+              <PrivateRoute>
+                <Account />
+              </PrivateRoute>
+            }
+          />
         </Routes>
       </div>
     </Provider>

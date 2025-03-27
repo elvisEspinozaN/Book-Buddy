@@ -1,6 +1,5 @@
 import { Link } from "react-router-dom";
 import { useGetBooksQuery } from "../app/bookApiSlice";
-import SingleBook from "./SingleBook";
 
 function BookList() {
   // fetching books
