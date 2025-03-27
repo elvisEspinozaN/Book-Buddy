@@ -12,7 +12,27 @@ const bookApiSlice = apiSlice.injectEndpoints({
       query: (id) => `/books/${id}`,
       providesTags: ["Books"],
     }),
+    checkoutBook: builder.mutation({
+      query: (bookId) => ({
+        url: "/reservations",
+        method: "POST",
+        body: { bookId },
+      }),
+      invalidatesTags: ["Books"],
+    }),
+    returnBook: builder.mutation({
+      query: (reservationId) => ({
+        url: `/reservations/${reservationId}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["Books"],
+    }),
   }),
 });
 
-export const { useGetBooksQuery, useGetBookByIdQuery } = bookApiSlice;
+export const {
+  useGetBooksQuery,
+  useGetBookByIdQuery,
+  useCheckoutBookMutation,
+  useReturnBookMutation,
+} = bookApiSlice;

@@ -1,9 +1,27 @@
 import { useParams } from "react-router-dom";
-import { useGetBookByIdQuery } from "../app/bookApiSlice";
+import {
+  useGetBookByIdQuery,
+  useCheckoutBookMutation,
+} from "../app/bookApiSlice";
+import { useState } from "react";
 
 function SingleBook() {
   const { id } = useParams();
   const { data, isLoading } = useGetBookByIdQuery(id);
+  const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(null);
+  const [checkoutBook] = useCheckoutBookMutation();
+
+  const handleCheckout = async () => {
+    setError(null);
+    setSuccess(null);
+    try {
+      await checkoutBook(data.id).unwrap();
+      setSuccess("Successfully checked out!");
+    } catch (e) {
+      setError(e?.data?.message || "Failed to checkout.");
+    }
+  };
 
   if (isLoading) {
     return (
@@ -19,8 +37,10 @@ function SingleBook() {
       <h2>{data.title}</h2>
       <h3>By {data.author}</h3>
       <p>{data.description}</p>
+      {error && <div>{error}</div>}
+      {success && <div>{success}</div>}
       {data.available ? (
-        <button>Checkout</button>
+        <button onClick={handleCheckout}>Checkout</button>
       ) : (
         <p>This book is currently unavailable</p>
       )}

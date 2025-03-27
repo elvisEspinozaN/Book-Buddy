@@ -20,7 +20,16 @@ export const userApi = apiSlice.injectEndpoints({
       query: () => "/users/me",
       transformResponse: (response) => response,
     }),
+    getReservations: builder.query({
+      query: () => "/reservations",
+      providesTags: ["Reservations"],
+    }),
   }),
 });
 
-export const { useRegisterMutation, useLoginMutation, useGetMeQuery } = userApi;
+export const {
+  useRegisterMutation,
+  useLoginMutation,
+  useGetMeQuery,
+  useGetReservationsQuery,
+} = userApi;
