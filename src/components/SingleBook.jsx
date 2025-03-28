@@ -2,15 +2,17 @@ import { useParams } from "react-router-dom";
 import {
   useGetBookByIdQuery,
   useCheckoutBookMutation,
+  useGetBooksQuery,
 } from "../app/bookApiSlice";
 import { useState } from "react";
 
 function SingleBook() {
   const { id } = useParams();
-  const { data, isLoading } = useGetBookByIdQuery(id);
+  const { data, isLoading, refetch } = useGetBookByIdQuery(id);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
   const [checkoutBook] = useCheckoutBookMutation();
+  const { refetch: refetchBooks } = useGetBooksQuery();
 
   const handleCheckout = async () => {
     setError(null);
@@ -18,6 +20,8 @@ function SingleBook() {
     try {
       await checkoutBook(data.id).unwrap();
       setSuccess("Successfully checked out!");
+      refetch();
+      refetchBooks();
     } catch (e) {
       setError(e?.data?.message || "Failed to checkout.");
     }

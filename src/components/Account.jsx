@@ -23,6 +23,7 @@ function Account() {
   const handleReturn = async (reservationId) => {
     try {
       await returnBook(reservationId).unwrap();
+      setError(null);
     } catch (e) {
       setError(e?.data?.message || "Failed to return book.");
     }
@@ -36,7 +37,10 @@ function Account() {
       <p>Email: {data?.email}</p>
       <h3>Your Books</h3>
       {error && <div>{error}</div>}
-      {(reservations?.length > 0 ? reservations : []).map((reservation) => (
+
+      {reservations?.length === 0 && <p>No books checked out</p>}
+
+      {reservations?.map((reservation) => (
         <div key={reservation.id}>
           {reservation.title}
           <button onClick={() => handleReturn(reservation.id)}>

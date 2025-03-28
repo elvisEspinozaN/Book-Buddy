@@ -18,14 +18,14 @@ const bookApiSlice = apiSlice.injectEndpoints({
         method: "POST",
         body: { bookId },
       }),
-      invalidatesTags: ["Books"],
+      invalidatesTags: ["Books", "Reservations"],
     }),
     returnBook: builder.mutation({
       query: (reservationId) => ({
         url: `/reservations/${reservationId}`,
         method: "DELETE",
       }),
-      invalidatesTags: ["Books"],
+      invalidatesTags: ["Books", "Reservations"],
     }),
   }),
 });
