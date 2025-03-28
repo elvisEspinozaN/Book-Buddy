@@ -12,6 +12,7 @@ import Account from "./components/Account";
 import { useGetMeQuery } from "./app/userApi";
 import { useEffect } from "react";
 import { setUser } from "./app/authSlice";
+import Footer from "./components/Footer";
 
 function App() {
   const dispatch = useDispatch();
@@ -42,6 +43,7 @@ function App() {
         />
         <Route path="*" element={<div>Page Not Found.</div>} />
       </Routes>
+      <Footer />
     </div>
   );
 }

@@ -1,0 +1,37 @@
+.footer {
+  background-color: #2c3e50;
+  color: white;
+  padding: 2rem 0;
+  margin-top: auto;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+  text-align: center;
+  display: flex;
+  justify-content: space-around;
+}
+
+.text {
+  margin-bottom: 1rem;
+  font-size: 1rem;
+}
+
+.link {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: white;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.link:hover {
+  color: #3498db;
+}
+
+.icon {
+  font-size: 1.5rem;
+}
