@@ -1,9 +1,9 @@
 import { Link } from "react-router-dom";
 import { useGetBooksQuery } from "../app/bookApiSlice";
 import { useState } from "react";
+import styles from "../styles/BookList.module.css";
 
 function BookList() {
-  // fetching books
   const { data, isError, isLoading } = useGetBooksQuery();
   const [search, setSearch] = useState("");
 
@@ -13,55 +13,92 @@ function BookList() {
       book.author.toLowerCase().includes(search.toLowerCase())
   );
 
-  if (isLoading) {
-    return (
-      <div>
-        <p>Loading...</p>
-      </div>
-    );
-  }
+  const availableBooks = data?.filter((book) => book.available) || [];
+  const unavailableBooks = data?.filter((book) => !book.available) || [];
 
-  if (isError) {
-    return (
-      <div>
-        <p>Error loading books, try again later.</p>
-      </div>
-    );
-  }
+  if (isLoading) return <div className={styles.loading}>Loading...</div>;
+  if (isError) return <div className={styles.error}>Failed to load books</div>;
 
   return (
-    <div>
-      <div>
+    <div className={styles.container}>
+      <div className={styles.searchContainer}>
         <input
           type="text"
-          placeholder="Search"
+          placeholder="Search books by title or author..."
+          className={styles.search}
           onChange={(e) => setSearch(e.target.value)}
         />
+      </div>
 
-        {/* Search Results */}
-        {search && (
-          <div>
-            <h4>Search Results:</h4>
-            {filteredBooks.length > 0 ? (
-              filteredBooks.map((book) => (
-                <Link to={`/books/${book.id}`} key={book.id}>
+      {search && filteredBooks.length > 0 && (
+        <div className={styles.section}>
+          <h2>Search Results</h2>
+          <div className={styles.searchResults}>
+            {filteredBooks.map((book) => (
+              <Link
+                key={book.id}
+                to={`/books/${book.id}`}
+                className={styles.bookCard}
+              >
+                <img
+                  src={book.coverimage}
+                  alt={book.title}
+                  className={styles.thumbnail}
+                />
+                <div className={styles.bookInfo}>
                   <h3>{book.title}</h3>
-                </Link>
-              ))
-            ) : (
-              <p>No books found.</p>
-            )}
+                  <p>{book.author}</p>
+                  <span
+                    className={
+                      book.available ? styles.available : styles.unavailable
+                    }
+                  >
+                    {book.available ? "Available" : "Checked Out"}
+                  </span>
+                </div>
+              </Link>
+            ))}
           </div>
-        )}
+        </div>
+      )}
 
-        {/* All Books */}
-        <div>
-          <h4>All Books:</h4>
-          {data.map((book) => (
-            <Link to={`/books/${book.id}`} key={book.id}>
-              <h3>{book.title}</h3>
-            </Link>
-          ))}
+      <div className={styles.mainContent}>
+        <div className={styles.section}>
+          <h2>Books</h2>
+          <div className={styles.booksGrid}>
+            {availableBooks.map((book) => (
+              <Link
+                key={book.id}
+                to={`/books/${book.id}`}
+                className={styles.bookCard}
+              >
+                <img
+                  src={book.coverimage}
+                  alt={book.title}
+                  className={styles.thumbnail}
+                />
+                <div className={styles.bookInfo}>
+                  <h3>{book.title}</h3>
+                  <p>{book.author}</p>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+
+        <div className={styles.section}>
+          <h2>Coming Back Soon </h2>
+          <div className={styles.comingSoonList}>
+            {unavailableBooks.map((book) => (
+              <Link
+                key={book.id}
+                to={`/books/${book.id}`}
+                className={styles.comingSoonItem}
+              >
+                {book.title} by {book.author}
+              </Link>
+            ))}
+          </div>
         </div>
       </div>
     </div>
