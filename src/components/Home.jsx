@@ -8,7 +8,9 @@ function Home() {
   const [randomBooks, setRandomBooks] = useState([]);
 
   useEffect(() => {
+    // side effect runs when data is fetched
     if (books) {
+      // filters available books
       const availableBooks = books.filter((book) => book.available);
       const shuffled = [...availableBooks].sort(() => 0.5 - Math.random());
       setRandomBooks(shuffled.slice(0, 10));
