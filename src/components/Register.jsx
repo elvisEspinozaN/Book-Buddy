@@ -3,6 +3,7 @@ import { useRegisterMutation } from "../app/userApi";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { setCredentials } from "../app/authSlice";
+import styles from "../styles/Register.module.css";
 
 function Register() {
   const [formData, setFormData] = useState({
@@ -19,9 +20,12 @@ function Register() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError(null);
+
     if (formData.password !== confirmPassword) {
-      setError("Passwords don't match");
+      return setError("Passwords don't match");
     }
+
     try {
       const response = await register(formData).unwrap();
       dispatch(
@@ -32,51 +36,64 @@ function Register() {
       );
       navigate("/account");
     } catch (e) {
-      setError(e.data?.error?.message || "registration Failed.");
+      setError(e.data?.error?.message || "Registration failed");
     }
   };
 
   return (
-    <div>
-      {error && <div>{error}</div>}
-      <form onSubmit={handleSubmit}>
-        <input
-          placeholder="First Name"
-          value={formData.firstname}
-          onChange={(e) =>
-            setFormData({ ...formData, firstname: e.target.value })
-          }
-        />
-        <input
-          placeholder="Last Name"
-          value={formData.lastname}
-          onChange={(e) =>
-            setFormData({ ...formData, lastname: e.target.value })
-          }
-        />
-        <input
-          type="email"
-          placeholder="Email"
-          value={formData.email}
-          onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-        />
-        <input
-          type="password"
-          placeholder="Password"
-          value={formData.password}
-          onChange={(e) =>
-            setFormData({ ...formData, password: e.target.value })
-          }
-        />
+    <div className={styles.container}>
+      <form onSubmit={handleSubmit} className={styles.form}>
+        <h2 className={styles.title}>Create Account</h2>
 
-        <input
-          type="password"
-          placeholder="Confirm Password"
-          value={confirmPassword}
-          onChange={(e) => setConfirmPassword(e.target.value)}
-        />
+        {error && <div className={styles.error}>{error}</div>}
 
-        <button type="submit">Register</button>
+        <div className={styles.inputGroup}>
+          <input
+            placeholder="First Name"
+            value={formData.firstname}
+            onChange={(e) =>
+              setFormData({ ...formData, firstname: e.target.value })
+            }
+            className={styles.input}
+          />
+          <input
+            placeholder="Last Name"
+            value={formData.lastname}
+            onChange={(e) =>
+              setFormData({ ...formData, lastname: e.target.value })
+            }
+            className={styles.input}
+          />
+          <input
+            type="email"
+            placeholder="Email"
+            value={formData.email}
+            onChange={(e) =>
+              setFormData({ ...formData, email: e.target.value })
+            }
+            className={styles.input}
+          />
+          <input
+            type="password"
+            placeholder="Password"
+            value={formData.password}
+            onChange={(e) =>
+              setFormData({ ...formData, password: e.target.value })
+            }
+            className={styles.input}
+          />
+          <input
+            type="password"
+            placeholder="Confirm Password"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            className={styles.input}
+          />
+        </div>
+
+        <button type="submit" className={styles.button}>
+          Register
+        </button>
       </form>
     </div>
   );
