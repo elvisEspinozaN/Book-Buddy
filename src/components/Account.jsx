@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useReturnBookMutation } from "../app/bookApiSlice";
 import { useGetMeQuery, useGetReservationsQuery } from "../app/userApi";
+import styles from "../styles/Account.module.css";
 
 function Account() {
   const { data, isLoading: isLoadingMe, error: meError } = useGetMeQuery();
@@ -13,11 +14,11 @@ function Account() {
   const [error, setError] = useState(null);
 
   if (isLoadingMe || isLoadingReservations) {
-    return <p>Loading...</p>;
+    return <div className={styles.loading}>Loading...</div>;
   }
 
   if (meError || reservationsError) {
-    return <p>Error loading account details</p>;
+    return <div className={styles.error}>Error loading account details</div>;
   }
 
   const handleReturn = async (reservationId) => {
@@ -30,24 +31,45 @@ function Account() {
   };
 
   return (
-    <div>
-      <h2>
-        {data?.firstname} {data?.lastname}
-      </h2>
-      <p>Email: {data?.email}</p>
-      <h3>Your Books</h3>
-      {error && <div>{error}</div>}
+    <div className={styles.container}>
+      <div className={styles.profile}>
+        <h2 className={styles.name}>
+          {data?.firstname} {data?.lastname}
+        </h2>
+        <p className={styles.email}>{data?.email}</p>
+      </div>
 
-      {reservations?.length === 0 && <p>No books checked out</p>}
+      <div className={styles.section}>
+        <h3 className={styles.sectionTitle}>Your Books</h3>
 
-      {reservations?.map((reservation) => (
-        <div key={reservation.id}>
-          {reservation.title}
-          <button onClick={() => handleReturn(reservation.id)}>
-            Return Book
-          </button>
-        </div>
-      ))}
+        {error && <div className={styles.errorMessage}>{error}</div>}
+
+        {reservations?.length === 0 ? (
+          <p className={styles.empty}>No books currently checked out</p>
+        ) : (
+          <div className={styles.reservationsGrid}>
+            {reservations?.map((reservation) => (
+              <div key={reservation.id} className={styles.reservationCard}>
+                <img
+                  src={reservation.coverimage}
+                  alt={reservation.title}
+                  className={styles.bookCover}
+                />
+                <div className={styles.details}>
+                  <h4 className={styles.bookTitle}>{reservation.title}</h4>
+                  <p className={styles.bookAuthor}>{reservation.author}</p>
+                  <button
+                    onClick={() => handleReturn(reservation.id)}
+                    className={styles.returnButton}
+                  >
+                    Return Book
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 }
