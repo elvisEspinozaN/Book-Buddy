@@ -5,6 +5,7 @@ import {
   useGetBooksQuery,
 } from "../app/bookApiSlice";
 import { useState } from "react";
+import styles from "../styles/SingleBook.module.css";
 
 function SingleBook() {
   const { id } = useParams();
@@ -12,12 +13,14 @@ function SingleBook() {
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
   const [checkoutBook] = useCheckoutBookMutation();
+  // refetching all books after checkout
   const { refetch: refetchBooks } = useGetBooksQuery();
 
   const handleCheckout = async () => {
     setError(null);
     setSuccess(null);
     try {
+      // fetching book and checkout mutation
       await checkoutBook(data.id).unwrap();
       setSuccess("Successfully checked out!");
       refetch();
@@ -29,25 +32,45 @@ function SingleBook() {
 
   if (isLoading) {
     return (
-      <div>
+      <div className={styles.loading}>
         <p>Loading...</p>
       </div>
     );
   }
 
   return (
-    <div>
-      <img src={data.coverimage} alt={data.title} />
-      <h2>{data.title}</h2>
-      <h3>By {data.author}</h3>
-      <p>{data.description}</p>
-      {error && <div>{error}</div>}
-      {success && <div>{success}</div>}
-      {data.available ? (
-        <button onClick={handleCheckout}>Checkout</button>
-      ) : (
-        <p>This book is currently unavailable</p>
-      )}
+    <div className={styles.container}>
+      <div className={styles.bookContainer}>
+        <img src={data.coverimage} alt={data.title} className={styles.cover} />
+
+        <div className={styles.details}>
+          <h1 className={styles.title}>{data.title}</h1>
+          <h2 className={styles.author}>By {data.author}</h2>
+
+          <div className={styles.status}>
+            {data.available ? (
+              <span className={styles.available}>Available</span>
+            ) : (
+              <span className={styles.unavailable}>Checked Out</span>
+            )}
+          </div>
+
+          <p className={styles.description}>{data.description}</p>
+
+          {error && <div className={styles.error}>{error}</div>}
+          {success && <div className={styles.success}>{success}</div>}
+
+          {data.available ? (
+            <button onClick={handleCheckout} className={styles.button}>
+              Checkout Book
+            </button>
+          ) : (
+            <p className={styles.unavailableText}>
+              This book will be available soon
+            </p>
+          )}
+        </div>
+      </div>
     </div>
   );
 }
