@@ -6,7 +6,7 @@ const apiSlice = createApi({
     validateStatus: (response) =>
       response.status >= 200 && response.status < 300,
     prepareHeaders: (headers, { getState }) => {
-      // token from authslice
+      // token management
       const token = getState().auth.token;
       if (token) {
         // attaching token to authorization header
@@ -16,7 +16,7 @@ const apiSlice = createApi({
     },
   }),
   // for cache invalidaiton
-  tagTypes: ["Books"],
+  tagTypes: ["Books", "Reservations", "User"],
   endpoints: () => ({}),
 });
 

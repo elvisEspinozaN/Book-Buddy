@@ -19,6 +19,7 @@ export const userApi = apiSlice.injectEndpoints({
     getMe: builder.query({
       query: () => "/users/me",
       transformResponse: (response) => response,
+      providesTags: ["User"],
     }),
     getReservations: builder.query({
       query: () => "/reservations",

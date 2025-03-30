@@ -14,6 +14,7 @@ const authSlice = createSlice({
     setCredentials: (state, action) => {
       // saving token from payloaf to state
       state.token = action.payload.token;
+      // persistance
       localStorage.setItem("token", action.payload.token);
     },
     logout: (state) => {
@@ -27,6 +28,7 @@ const authSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
+    // automati clogout on auth failure
     builder.addMatcher(apiSlice.endpoints.getMe.matchRejected, (state) => {
       state.token = null;
       state.user = null;
